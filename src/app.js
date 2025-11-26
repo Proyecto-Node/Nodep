@@ -36,6 +36,13 @@ import taskRoutes from "./src/routes/taskRoutes.js";
 // Conectamos las rutas bajo el prefijo /tasks
 app.use("/tasks", taskRoutes);
 
+// Importamos rutas de autenticación
+import authRoutes from "./src/routes/authRoutes.js";
+
+// Usamos las rutas bajo /auth
+app.use("/auth", authRoutes);
+
+
 // Ejemplo usando Prisma
 app.get("/users", async (req, res) => {
   const users = await prisma.user.findMany();
