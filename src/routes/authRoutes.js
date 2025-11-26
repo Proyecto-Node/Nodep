@@ -1,12 +1,18 @@
 import express from "express";
 
-// Importamos el controlador de registro
-import { registerUser } from "./controllers/authController.js";
+// Importamos los controladores reales
+import { registerUser, loginUser } from "../controllers/authController.js";
 
 const router = express.Router();
 
-// Ruta POST /auth/register
-// Esta ruta permite registrar usuarios nuevos
+/* ================================
+   RUTAS DE AUTENTICACIÓN
+================================ */
+
+// Registro de usuario
 router.post("/register", registerUser);
+
+// Login de usuario
+router.post("/login", loginUser);
 
 export default router;
