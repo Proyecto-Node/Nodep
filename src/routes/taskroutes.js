@@ -1,3 +1,7 @@
+// ============================================================
+// Rutas de Tareas (tasks.routes.js)
+// ============================================================
+
 // Importamos Express para crear el router
 import express from "express";
 
@@ -9,20 +13,33 @@ import {
   deleteTask,
 } from "../controllers/taskcontroller.js";
 
+// Importamos el middleware de autenticación
+// Este middleware valida el JWT enviado en los headers
+import { authMiddleware } from "../middleware/authMiddleware.js";
+
 // Creamos el router
 const router = express.Router();
 
-// GET /tasks → Lista todas las tareas
-router.get("/", getTasks);
+// ============================================================
+// Todas las rutas de tareas están protegidas con JWT
+// Esto significa que solo usuarios autenticados pueden:
+// - ver sus tareas
+// - crear tareas
+// - actualizar sus propias tareas
+// - eliminar sus propias tareas
+// ============================================================
 
-// POST /tasks → Crea una nueva tarea
-router.post("/", createTask);
+// GET /tasks → Lista todas las tareas del usuario autenticado
+router.get("/", authMiddleware, getTasks);
 
-// PUT /tasks/:id → Actualiza una tarea existente
-router.put("/:id", updateTask);
+// POST /tasks → Crea una nueva tarea asociada al usuario autenticado
+router.post("/", authMiddleware, createTask);
 
-// DELETE /tasks/:id → Elimina una tarea por ID
-router.delete("/:id", deleteTask);
+// PUT /tasks/:id → Actualiza una tarea si pertenece al usuario autenticado
+router.put("/:id", authMiddleware, updateTask);
+
+// DELETE /tasks/:id → Elimina una tarea si pertenece al usuario autenticado
+router.delete("/:id", authMiddleware, deleteTask);
 
 // Exportamos el router para usarlo en app.js
 export default router;
