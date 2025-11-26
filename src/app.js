@@ -1,22 +1,38 @@
 import express from "express";
 import dotenv from "dotenv";
-import prisma from "./prisma.js"; // 👈 Importa Prisma
 
+// Cargamos variables de entorno
 dotenv.config();
 
+// Inicializamos express
 const app = express();
 
-// Solo para probar que Prisma funciona
-app.get("/", async (req, res) => {
-  const users = await prisma.user.findMany(); // 👈 Usa Prisma
-  res.json({
-    message: "API running with Prisma connected",
-    users,
-  });
+app.get("/", (req, res) => {
+  res.send("API running");
 });
 
-const PORT = process.env.PORT || 3000;
+// Importamos las rutas de tareas
+import taskRoutes from "./src/routes/taskRoutes.js";
 
+// Conectamos las rutas bajo el prefijo /tasks
+app.use("/tasks", taskRoutes);
+
+// Importamos rutas de autenticación
+import authRoutes from "./src/routes/authRoutes.js";
+
+// Usamos las rutas bajo /auth
+app.use("/auth", authRoutes);
+
+
+// Ejemplo usando Prisma
+app.get("/users", async (req, res) => {
+  const users = await prisma.user.findMany();
+  res.json(users);
+});
+
+/* -----------------------------------------
+   INICIAR SERVIDOR
+------------------------------------------ */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
